@@ -1,6 +1,6 @@
 APPLICATION = vrvm-node
 
-BOARD ?= m3
+BOARD ?= iotlab-m3
 
 RIOTBASE ?=$(CURDIR)/../RIOT
 
