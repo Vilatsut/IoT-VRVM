@@ -6,6 +6,7 @@
 #include "ztimer.h"
 #include "shell.h"
 #include "mutex.h"
+#include "msg.h"
 
 #define SENSOR_PERIOD_MS    5000
 #define INIT_SLEEP          5000
@@ -14,6 +15,9 @@
 static lpsxxx_t lpsxxx;
 
 static char sensor_stack[THREAD_STACKSIZE_MAIN];
+
+#define MAIN_QUEUE_SIZE     (8)
+static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
 
 // Mutex to protect global variables
 mutex_t sensor_mutex;
@@ -63,9 +67,10 @@ int main(void)
     puts("Application starts");
 
     lpsxxx_init(&lpsxxx, &lpsxxx_params[0]);
+    msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
 
     thread_create(sensor_stack, sizeof(sensor_stack), THREAD_PRIORITY_MAIN - 1,
-                  0, sensor_thread, NULL, "Writer thread");
+                  0, sensor_thread, NULL, "Sensor thread");
 
     char line_buf[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
