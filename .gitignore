@@ -53,3 +53,4 @@ dkms.conf
 
 # Build directories
 **/bin
+server/venv/
