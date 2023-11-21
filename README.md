@@ -6,6 +6,11 @@ RIOT OS is included to this repository as a submodule. After cloning this reposi
 ```
 git submodule update --init
 ```
+Check out to correct branch (release 2023.07 is used)
+```
+cd RIOT
+git checkout 2023.07-branch
+```
 
 ## Building firmware
 Correct tools must be instelled to build the RIOT OS firmware. Using Ubuntu-based distro the required tools can be installed using the following command:
