@@ -11,4 +11,4 @@ typedef struct {
 int sensors_init(void);
 sensor_values_t sensors_get_values(void);
 
-#endif /* GRANDPARENT_H */
+#endif /* SENSORS_H */
