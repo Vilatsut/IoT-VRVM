@@ -1,46 +1,64 @@
+import os
 import asyncio
 import sqlite3
 
-import logging
 
 import aiocoap
 import aiocoap.resource as resource
-from aiocoap.numbers.contentformat import ContentFormat
+from aiocoap.numbers.codes import Code
 
 DB_Name =  "sensor.db"
+
+if not os.path.isfile(DB_Name):
+    conn = sqlite3.connect(DB_Name)
+    c = conn.cursor()
+    c.execute("""CREATE TABLE data (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date_time text,
+        mac text,
+        field integer,
+        data real
+        )""")
+    conn.commit()
+    conn.close()
 
 class DatabaseManager():
     """Class for managing the sqlite3 database containing the temperature readings"""
 
     def __init__(self):
-	    self.conn = sqlite3.connect(DB_Name)
-	    self.conn.execute('pragma foreign_keys = on')
-	    self.conn.commit()
-	    self.cur = self.conn.cursor()
+        self.conn = sqlite3.connect(DB_Name)
+        self.conn.execute('pragma foreign_keys = on')
+        self.conn.commit()
+        self.cur = self.conn.cursor()
 
-    def add_del_update_db_record(self, sql_query, args=()):
-	    self.cur.execute(sql_query, args)
-	    self.conn.commit()
-	    return
+    def process_db(self, sql_query, args=()):
+        self.cur.execute(sql_query, args)
+        self.conn.commit()
 
     def __del__(self):
-	    self.cur.close()
-	    self.conn.close()
+        self.cur.close()
+        self.conn.close()
 
-class BlockResource(resource.Resource):
+class Temperature(resource.Resource):
     """Resource for PUTting temperature data into the database"""
 
     def __init__(self):
         super().__init__()
         self.content = ""
 
-    async def render_put(self, request):
-        print("PUT payload: %s" % request.payload)
-        return aiocoap.Message(code=aiocoap.CHANGED, payload=self.request.payload)
+    async def render_put(self, message):
+        print(f"PUT payload: {message.payload}")
+        dbm = DatabaseManager()
+        dbm.process_db("INSERT INTO data (API_key, date_time, mac, field, data) VALUES (?,?,?,?,?)",
+            (
+                message.opt.uri_query["date_time"],
+                message.opt.uri_query["mac"],
+                message.opt.uri_query["field"],
+                message.opt.uri_query["data"]
+                ))
+        del dbm
+        return aiocoap.Message(code=Code.CHANGED, payload=message.payload)
 
-
-logging.basicConfig(level=logging.INFO)
-logging.getLogger("coap-server").setLevel(logging.DEBUG)
 
 
 async def main():
@@ -48,7 +66,7 @@ async def main():
 
     root = resource.Site()
 
-    root.add_resource(["temperature"], BlockResource())
+    root.add_resource(["temperature"], Temperature())
 
     await aiocoap.Context.create_server_context(root)
 
