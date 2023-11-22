@@ -25,7 +25,11 @@ static int sensor_handler(int argc, char *argv[])
     (void) argc;
     (void) argv;
 
-    sensor_values_t values = sensors_get_values();
+    sensor_values_t values;
+    if (sensors_get_values(&values))
+    {
+        puts("Failed to get sensor values");
+    }
 
     printf("Temperature %i.%u°C, Pressure %uhPa \n", values.temperature / 100, 
             values.temperature % 100, values.pressure);

@@ -11,11 +11,7 @@ static char _last_req_path[_LAST_REQ_PATH_MAX];
 static void _resp_handler (const gcoap_request_memo_t *memo, coap_pkt_t *pdu,
                             const sock_udp_ep_t *remote)
 {
-    (void)memo;
-    (void)pdu;
     (void)remote;
-
-    puts("COAP response received");
 
     if (memo->state == GCOAP_MEMO_TIMEOUT) {
         printf("gcoap: timeout for msg ID %02u\n", coap_get_id(pdu));

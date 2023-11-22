@@ -9,6 +9,6 @@ typedef struct {
 } sensor_values_t;
 
 int sensors_init(void);
-sensor_values_t sensors_get_values(void);
+int sensors_get_values(sensor_values_t* values);
 
 #endif /* SENSORS_H */

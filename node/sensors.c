@@ -9,25 +9,22 @@ int sensors_init(void)
 {
     if (lpsxxx_init(&lpsxxx, &lpsxxx_params[0]) != LPSXXX_OK)
     {
-        puts("LPS331AP init failed");
         return 1;
     }
     return 0;
 }
 
-sensor_values_t sensors_get_values(void)
+int sensors_get_values(sensor_values_t* values)
 {
-    sensor_values_t values;
-
-    if (lpsxxx_read_temp(&lpsxxx, &(values.temperature)) != LPSXXX_OK)
+    if (lpsxxx_read_temp(&lpsxxx, &(values->temperature)) != LPSXXX_OK)
     {
-        puts("LPS331AP temperature read failed");
+        return 1;
     }
 
-    if (lpsxxx_read_pres(&lpsxxx, &(values.pressure)) != LPSXXX_OK)
+    if (lpsxxx_read_pres(&lpsxxx, &(values->pressure)) != LPSXXX_OK)
     {
-       puts("LPS331AP pressure read failed");
+       return 1;
     }
 
-    return values;
+    return 0;
 }
