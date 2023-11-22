@@ -6,6 +6,10 @@ RIOTBASE ?=$(CURDIR)/../RIOT
 
 DEVELHELP ?= 1
 
+
+COAP_SERVER ?= 2a01:111:f100:8000::4134:941d
+CFLAGS += -DCOAP_SERVER='"$(COAP_SERVER)"'
+
 # Utilities
 USEMODULE += ztimer_msec
 USEMODULE += shell
@@ -32,15 +36,24 @@ USEMODULE += auto_init_gnrc_rpl
 USEMODULE += gnrc_icmpv6_echo
 USEMODULE += shell_cmd_gnrc_udp
 
+# Enable DNS
+USEMODULE += sock_dns
+
 # Add also the shell, some shell commands
 USEMODULE += ps
 USEMODULE += netstats_l2
 USEMODULE += netstats_ipv6
 USEMODULE += netstats_rpl
 
+USEMODULE += od
+USEMODULE += fmt
+
+# COAP
+USEMODULE += gcoap
+
 USE_ZEP ?= 0
 
-# set the ZEP port for native
+# set the ZEP port for native (not sure is this really needed in this application)
 ZEP_PORT_BASE ?= 17754
 ifeq (1,$(USE_ZEP))
   TERMFLAGS += -z [::1]:$(ZEP_PORT_BASE)
