@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-#include "lpsxxx.h"
-#include "lpsxxx_params.h"
-
 #include "ztimer.h"
 #include "shell.h"
 #include "mutex.h"
@@ -13,15 +10,13 @@
 
 #include "od.h"
 
-// Global variables
-static lpsxxx_t lpsxxx;
+#include "sensors.h"
 
 #define MAIN_QUEUE_SIZE     (8)
 static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
 
 #define _LAST_REQ_PATH_MAX (32)
 static char _last_req_path[_LAST_REQ_PATH_MAX];
-
 
 // Taken from RIOT-OS course examples
 static void _resp_handler (const gcoap_request_memo_t *memo, coap_pkt_t *pdu,
@@ -181,21 +176,10 @@ static int sensor_handler(int argc, char *argv[])
     (void) argc;
     (void) argv;
 
-    int16_t temperature = 0;
-    uint16_t pressure = 0;
+    sensor_values_t values = sensors_get_values();
 
-    if (lpsxxx_read_temp(&lpsxxx, &temperature) != LPSXXX_OK)
-    {
-        puts("LPS331AP temperature read failed");
-    }
-
-    if (lpsxxx_read_pres(&lpsxxx, &pressure) != LPSXXX_OK)
-    {
-       puts("LPS331AP pressure read failed");
-    }
-
-    printf("Temperature %i.%u°C, Pressure %uhPa \n", temperature / 100, 
-            temperature % 100, pressure);
+    printf("Temperature %i.%u°C, Pressure %uhPa \n", values.temperature / 100, 
+            values.temperature % 100, values.pressure);
     return 0;
 }
 
@@ -209,11 +193,12 @@ static const shell_command_t shell_commands[] =
 int main(void)
 {
     puts("Application starts");
-
-    if (lpsxxx_init(&lpsxxx, &lpsxxx_params[0]) != LPSXXX_OK)
+    
+    if (sensors_init())
     {
-        puts("LPS331AP init failed");
+        puts("Sensors init failed");
     }
+
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
 
     char line_buf[SHELL_DEFAULT_BUFSIZE];
