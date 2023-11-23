@@ -4,6 +4,11 @@
 #include "od.h"
 #include "coap_wrapper.h"
 
+#include "sensors.h"
+
+#include "pb_encode.h"
+#include "message.pb.h"
+
 #define _LAST_REQ_PATH_MAX (32)
 static char _last_req_path[_LAST_REQ_PATH_MAX];
 
@@ -123,24 +128,40 @@ static size_t _send_coap(uint8_t *buf, size_t len)
 
 size_t coap_handler_impl(void)
 {
-    uint8_t buf[CONFIG_GCOAP_PDU_BUF_SIZE];
+    uint8_t coap_buf[CONFIG_GCOAP_PDU_BUF_SIZE];
     coap_pkt_t pdu;
     int len = 0;
-    char msg[5] = "Test";
+    SensorValues pb_message = SensorValues_init_zero;
+    size_t pb_message_length;
+    uint8_t pb_buf[128];
+    sensor_values_t values;
+
+    sensors_get_values(&values);
+
+    // Fill the protobuf struct
+    pb_message.sensor_id = 1;
+    pb_message.pressure = values.pressure;
+    pb_message.temperature = values.temperature;
+
+    // Prep sensor values to protobuf
+    pb_ostream_t stream = pb_ostream_from_buffer(pb_buf, sizeof(pb_buf));
+
+    pb_encode(&stream, SensorValues_fields, &pb_message);
+    pb_message_length = stream.bytes_written;
 
     // @TODO Hardcoded PUT and URI. Make something more general
-    gcoap_req_init(&pdu, &buf[0], CONFIG_GCOAP_PDU_BUF_SIZE, COAP_METHOD_PUT, "/large-update");
+    gcoap_req_init(&pdu, &coap_buf[0], CONFIG_GCOAP_PDU_BUF_SIZE, COAP_METHOD_PUT, "/large-update");
 
     // Needed if we want the request be confirmable
     // coap_hdr_set_type(pdu.hdr, COAP_TYPE_CON)
 
-    coap_opt_add_format(&pdu, COAP_FORMAT_TEXT);
+    coap_opt_add_format(&pdu, COAP_FORMAT_OCTET);
 
     len = coap_opt_finish(&pdu, COAP_OPT_FINISH_PAYLOAD);
-    if (pdu.payload_len >= sizeof(msg))
+    if (pdu.payload_len >= pb_message_length)
     {
-        memcpy(pdu.payload, &msg[0], sizeof(msg));
-        len += sizeof(msg);
+        memcpy(pdu.payload, &pb_buf, pb_message_length);
+        len += pb_message_length;
     }
     else
     {
@@ -148,5 +169,5 @@ size_t coap_handler_impl(void)
         return 1;
     }
 
-    return _send_coap(&buf[0], len);
+    return _send_coap(&coap_buf[0], len);
 }

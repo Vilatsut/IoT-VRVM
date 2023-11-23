@@ -51,6 +51,9 @@ USEMODULE += fmt
 # COAP
 USEMODULE += gcoap
 
+# External packages
+USEPKG += nanopb
+
 USE_ZEP ?= 0
 
 # set the ZEP port for native (not sure is this really needed in this application)
