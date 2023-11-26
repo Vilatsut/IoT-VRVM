@@ -6,6 +6,7 @@ import sqlite3
 import aiocoap
 import aiocoap.resource as resource
 from aiocoap.numbers.codes import Code
+from aiocoap.numbers.contentformat import ContentFormat
 
 DB_Name =  "sensor.db"
 
@@ -60,12 +61,13 @@ class Temperature(resource.Resource):
         return aiocoap.Message(code=Code.CHANGED, payload=message.payload)
 
 
-
 async def main():
     """Set up the server and run forever"""
 
     root = resource.Site()
 
+    root.add_resource(['.well-known', 'core'],
+            resource.WKCResource(root.get_resources_as_linkheader))
     root.add_resource(["temperature"], Temperature())
 
     await aiocoap.Context.create_server_context(root)

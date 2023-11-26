@@ -47,3 +47,13 @@ In the another SSH session:
 sudo ethos_uhcpd.py m3-105 tap3 2001:660:5307:3103::/64
 ```
 It's possible to run the experiment at another site, and current DEFAULT_CHANNEL, DEFAULT_PAN_ID, tap3 and IPv6 can be in use. Refer to RIOT-course IPv6 example if something is broken.
+
+## Building and running CoAP-server
+
+If docker isn't installed, install it using these instructions: https://docs.docker.com/engine/install/ubuntu/
+
+In the coap-server directory give the following commands to build and run the docker container:
+```
+docker build -t coap_server:1.0 .
+docker run -p 5683:5683 --net='host' coap_server:1.0
+```
