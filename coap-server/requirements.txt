@@ -1,1 +1,3 @@
 aiocoap==0.4.7
+influxdb_client==1.38.0
+protobuf==4.25.1
