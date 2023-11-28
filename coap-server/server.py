@@ -27,7 +27,7 @@ class Temperature(resource.Resource):
         print(f"PUT payload: {message.payload}")
 
         pb_sensorvalues.ParseFromString(message.payload)
-        #print(f"Protobuf: {str(pb_sensorvalues)}")
+        print(f"Protobuf: {str(pb_sensorvalues)}")
 
         return aiocoap.Message(code=Code.CHANGED, payload=message.payload)
 

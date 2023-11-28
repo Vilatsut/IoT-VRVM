@@ -150,7 +150,7 @@ size_t coap_handler_impl(void)
     pb_message_length = stream.bytes_written;
 
     // @TODO Hardcoded PUT and URI. Make something more general
-    gcoap_req_init(&pdu, &coap_buf[0], CONFIG_GCOAP_PDU_BUF_SIZE, COAP_METHOD_PUT, "/large-update");
+    gcoap_req_init(&pdu, &coap_buf[0], CONFIG_GCOAP_PDU_BUF_SIZE, COAP_METHOD_PUT, "/temperature");
 
     // Needed if we want the request be confirmable
     // coap_hdr_set_type(pdu.hdr, COAP_TYPE_CON)
