@@ -12,8 +12,10 @@ from aiocoap.numbers.contentformat import ContentFormat
 
 from datetime import datetime
 
-from influxdb_client import InfluxDBClient, Point, WriteOptions
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client.write_api import SYNCHRONOUS
 
+BUCKET = "iot-course"
 
 class Temperature(resource.Resource):
     """Resource for PUTting temperature data into the database"""
@@ -29,7 +31,17 @@ class Temperature(resource.Resource):
         pb_sensorvalues.ParseFromString(message.payload)
         print(f"Protobuf: {str(pb_sensorvalues)}")
 
-        return aiocoap.Message(code=Code.CHANGED, payload=message.payload)
+        p = Point("measurement").tag("location", "Grenoble") \
+            .field("sensor-id", pb_sensorvalues.id).field("temperature", pb_sensorvalues.temperature) \
+            .field("pressure", pb_sensorvalues.pressure)
+
+        with InfluxDBClient.from_config_file("influxdb_config.ini") as client:
+            with client.write_api() as writer:
+                writer.write(bucket=BUCKET, record=p)
+
+        write_api.write(bucket=bucket, record=p)
+
+        return aiocoap.Message(code=Code.CHANGED)
 
 
 async def main():
