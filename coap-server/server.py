@@ -32,14 +32,12 @@ class Temperature(resource.Resource):
         print(f"Protobuf: {str(pb_sensorvalues)}")
 
         p = Point("measurement").tag("location", "Grenoble") \
-            .field("sensor-id", pb_sensorvalues.id).field("temperature", pb_sensorvalues.temperature) \
+            .field("sensor-id", pb_sensorvalues.sensor_id).field("temperature", pb_sensorvalues.temperature) \
             .field("pressure", pb_sensorvalues.pressure)
 
         with InfluxDBClient.from_config_file("influxdb_config.ini") as client:
             with client.write_api() as writer:
                 writer.write(bucket=BUCKET, record=p)
-
-        write_api.write(bucket=bucket, record=p)
 
         return aiocoap.Message(code=Code.CHANGED)
 
