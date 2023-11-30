@@ -144,8 +144,8 @@ size_t coap_handler_impl(void)
 
     // Fill the protobuf struct
     pb_message.sensor_id = 1;
-    pb_message.pressure = temp;
-    pb_message.temperature = values.temperature;
+    pb_message.pressure = values.pressure;
+    pb_message.temperature = temp;
 
     // Prep sensor values to protobuf
     pb_ostream_t stream = pb_ostream_from_buffer(pb_buf, sizeof(pb_buf));
