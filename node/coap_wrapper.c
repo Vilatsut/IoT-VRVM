@@ -135,12 +135,16 @@ size_t coap_handler_impl(void)
     size_t pb_message_length;
     uint8_t pb_buf[128];
     sensor_values_t values;
+    float temp;
 
     sensors_get_values(&values);
 
+    // Convert from integer milli-celsius to float celsius
+    temp = (1.0 * values.temperature) / 100;
+
     // Fill the protobuf struct
     pb_message.sensor_id = 1;
-    pb_message.pressure = values.pressure;
+    pb_message.pressure = temp;
     pb_message.temperature = values.temperature;
 
     // Prep sensor values to protobuf

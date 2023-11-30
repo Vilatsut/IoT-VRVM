@@ -7,6 +7,6 @@ syntax = "proto3";
 
 message SensorValues {
     uint32 sensor_id = 1;
-    int32 temperature = 2;
+    float temperature = 2;
     uint32 pressure = 3;
 }

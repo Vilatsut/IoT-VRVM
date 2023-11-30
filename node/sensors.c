@@ -15,7 +15,10 @@ int sensors_init(void)
         return 1;
     }
 
-#if 1
+#if 0
+    // Gives a software reset for the sensor
+    // Tried because sensor gives wrong values
+
     i2c_acquire(lpsxxx.params.i2c);
     if (i2c_write_reg(lpsxxx.params.i2c, lpsxxx.params.addr, 
                       LPS331AP_REG_CTRL_REG2, 0x84, 0) < 0)
