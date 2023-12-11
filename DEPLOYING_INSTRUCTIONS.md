@@ -54,6 +54,18 @@ It's possible to run the experiment at another site, and current DEFAULT_CHANNEL
 
 ## Building and running the backend
 
+Requirements for the virtual machine (VM) running in the cloud service:
+
+<ul>
+    <li>Ubuntu 22.04</li>
+    <li>Public IPv6 address</li>
+    <li>Open ports: 8086 (InfluxDb), 3000 (Grafana), 5683 (CoAP), 22 (SSH for setuping)
+</ul>
+
+We don't cover how to deploy and setup the VM to the cloud provider, as many different cloud services can be used and everyone has different ways to deploy the VM. Refer to your cloud providers documentation. We used AWS EC2 cloud.
+
+SSH to your VM. Clone the repository to the VM.
+
 If Docker isn't installed, install it using these instructions: https://docs.docker.com/engine/install/ubuntu/
 
 To build and run the backend in whole (CoAP backend + influxdb + Grafana) run the following command:
