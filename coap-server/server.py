@@ -1,16 +1,14 @@
 import os
 import asyncio
+from datetime import datetime
 
 # Protocol buffer 
 import message_pb2
-
 
 import aiocoap
 import aiocoap.resource as resource
 from aiocoap.numbers.codes import Code
 from aiocoap.numbers.contentformat import ContentFormat
-
-from datetime import datetime
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
