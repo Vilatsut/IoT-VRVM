@@ -41,9 +41,16 @@ iotlab-experiment submit -n "node" -d 120 -l 2,archi=m3:at86rf231+site=grenoble
 iotlab-experiment wait --timeout 30 --cancel-on-timeout
 iotlab-experiment --jmespath="items[*].network_address | sort(@)" get --nodes
 ``` 
+To run the client node with the default COAP server address specified in the Makefile, use command:
 ```
 make BOARD=iotlab-m3 DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID>.grenoble.iot-lab.info flash
-
+```
+To run it with a different COAP_SERVER address, change the value in the 'Makefile' or give COAP_SERVER flag as follows:
+```
+make BOARD=iotlab-m3 COAP_SERVER=<IPv6_address> DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID>.grenoble.iot-lab.info flash
+```
+To flash the border router node, use command:
+```
 make -C ../RIOT/examples/gnrc_border_router/ BOARD=iotlab-m3 ETHOS_BAUDRATE=500000 DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID2>.grenoble.iot-lab.info flash
 ```
 Open two SSH connections to IoT-lab SSH-frontend:
