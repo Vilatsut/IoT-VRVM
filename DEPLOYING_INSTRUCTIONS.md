@@ -50,11 +50,11 @@ Open two SSH connections to IoT-lab SSH-frontend:
 ```
 ssh <login>@grenoble.iot-lab.info
 ```
-and give the following commands:
+In the first one give following command:
 ```
 nc m3-<ID> 20000
 ```
-In the another SSH session:
+In the other SSH session give command:
 ```
 sudo ethos_uhcpd.py m3-<ID2> tap3 2001:660:5307:3103::/64
 ```
