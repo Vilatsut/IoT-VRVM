@@ -18,3 +18,6 @@ requests==2.31.0
 rsa==4.9
 uritemplate==4.1.1
 urllib3==2.1.0
+aiocoap==0.4.7
+influxdb_client==1.38.0
+protobuf==4.25.1
