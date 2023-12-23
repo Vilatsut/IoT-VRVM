@@ -20,7 +20,7 @@ Correct tools must be instelled to build the RIOT OS firmware. Using Ubuntu-base
 ```
 sudo apt install git gcc-arm-none-eabi make gcc-multilib libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen wget unzip python3-serial protobuf-compiler
 ```
-To install python dependencies run the following under 'node' directory:
+To install python dependencies run the following under 'root' directory:
 ```
 pip install -r requirements.txt
 ```
