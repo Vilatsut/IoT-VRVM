@@ -1,0 +1,9 @@
+; Example file to setup influxdb client in Python
+; Change my-token to your authentication token, and remove
+; .example from this files name
+
+[influx2]
+url = http://localhost:8086
+org = my-org
+token = my-token
+verify_ssl = False

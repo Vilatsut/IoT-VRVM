@@ -135,13 +135,17 @@ size_t coap_handler_impl(void)
     size_t pb_message_length;
     uint8_t pb_buf[128];
     sensor_values_t values;
+    float temp;
 
     sensors_get_values(&values);
+
+    // Convert from integer milli-celsius to float celsius
+    temp = (1.0 * values.temperature) / 100;
 
     // Fill the protobuf struct
     pb_message.sensor_id = 1;
     pb_message.pressure = values.pressure;
-    pb_message.temperature = values.temperature;
+    pb_message.temperature = temp;
 
     // Prep sensor values to protobuf
     pb_ostream_t stream = pb_ostream_from_buffer(pb_buf, sizeof(pb_buf));
@@ -150,7 +154,7 @@ size_t coap_handler_impl(void)
     pb_message_length = stream.bytes_written;
 
     // @TODO Hardcoded PUT and URI. Make something more general
-    gcoap_req_init(&pdu, &coap_buf[0], CONFIG_GCOAP_PDU_BUF_SIZE, COAP_METHOD_PUT, "/large-update");
+    gcoap_req_init(&pdu, &coap_buf[0], CONFIG_GCOAP_PDU_BUF_SIZE, COAP_METHOD_PUT, "/temperature");
 
     // Needed if we want the request be confirmable
     // coap_hdr_set_type(pdu.hdr, COAP_TYPE_CON)

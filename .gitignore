@@ -53,4 +53,9 @@ dkms.conf
 
 # Build directories
 **/bin
+
 coap-server/venv/
+
+# Actual configuration files
+compose.yaml
+coap-server/influxdb_config.ini

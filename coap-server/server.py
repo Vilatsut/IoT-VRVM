@@ -1,44 +1,19 @@
 import os
 import asyncio
-import sqlite3
+from datetime import datetime
 
+# Protocol buffer 
+import message_pb2
 
 import aiocoap
 import aiocoap.resource as resource
 from aiocoap.numbers.codes import Code
 from aiocoap.numbers.contentformat import ContentFormat
 
-DB_Name =  "sensor.db"
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client.write_api import SYNCHRONOUS
 
-if not os.path.isfile(DB_Name):
-    conn = sqlite3.connect(DB_Name)
-    c = conn.cursor()
-    c.execute("""CREATE TABLE data (
-        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date_time text,
-        mac text,
-        field integer,
-        data real
-        )""")
-    conn.commit()
-    conn.close()
-
-class DatabaseManager():
-    """Class for managing the sqlite3 database containing the temperature readings"""
-
-    def __init__(self):
-        self.conn = sqlite3.connect(DB_Name)
-        self.conn.execute('pragma foreign_keys = on')
-        self.conn.commit()
-        self.cur = self.conn.cursor()
-
-    def process_db(self, sql_query, args=()):
-        self.cur.execute(sql_query, args)
-        self.conn.commit()
-
-    def __del__(self):
-        self.cur.close()
-        self.conn.close()
+BUCKET = "iot-course"
 
 class Temperature(resource.Resource):
     """Resource for PUTting temperature data into the database"""
@@ -48,17 +23,21 @@ class Temperature(resource.Resource):
         self.content = ""
 
     async def render_put(self, message):
+        pb_sensorvalues = message_pb2.SensorValues()
         print(f"PUT payload: {message.payload}")
-        dbm = DatabaseManager()
-        dbm.process_db("INSERT INTO data (API_key, date_time, mac, field, data) VALUES (?,?,?,?,?)",
-            (
-                message.opt.uri_query["date_time"],
-                message.opt.uri_query["mac"],
-                message.opt.uri_query["field"],
-                message.opt.uri_query["data"]
-                ))
-        del dbm
-        return aiocoap.Message(code=Code.CHANGED, payload=message.payload)
+
+        pb_sensorvalues.ParseFromString(message.payload)
+        print(f"Protobuf: {str(pb_sensorvalues)}")
+
+        p = Point("measurement").tag("location", "Grenoble") \
+            .field("sensor-id", pb_sensorvalues.sensor_id).field("temperature", pb_sensorvalues.temperature) \
+            .field("pressure", pb_sensorvalues.pressure)
+
+        with InfluxDBClient.from_config_file("influxdb_config.ini") as client:
+            with client.write_api() as writer:
+                writer.write(bucket=BUCKET, record=p)
+
+        return aiocoap.Message(code=Code.CHANGED)
 
 
 async def main():

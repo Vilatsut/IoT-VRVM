@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 /* If editing this file, also remember to update message.proto under
-   the 'coap-server' directory
+   the 'node' directory
    
    @TODO synchronize these two files */
 
