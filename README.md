@@ -25,4 +25,4 @@ Border router uses the same IoT-LAB M3 board as the actual sensor nodes. The dif
 
 ## Cloud
 
-Cloud is running in a virtual machine that is hosted in the [AWS](https://aws.amazon.com/). It is built using a microservices architecture and consists of three different services: CoAP backend, Influxdb and Grafana. CoAP backend receives CoAP messages from the sensor nodes and decodes the protobuf encoded payloads and then it sends the decoded data to the Influxdb. When the data is stored to the Influxdb it can be querried and visualized using the Grafana.
+Cloud is running in a virtual machine that is hosted in the [AWS](https://aws.amazon.com/). It is built using a microservices architecture and consists of three different services: CoAP backend, Influxdb and Grafana. CoAP backend receives CoAP messages from the sensor nodes and decodes the protobuf encoded payloads and then it sends the decoded data to the Influxdb. The stored data can be it can be querried from the influxDB and visualized by using the Grafana.

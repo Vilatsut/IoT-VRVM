@@ -65,9 +65,9 @@ In the other SSH session give command:
 ```
 sudo ethos_uhcpd.py m3-<ID2> tap3 2001:660:5307:3103::/64
 ```
-It's possible to run the experiment at another site, and current DEFAULT_CHANNEL, DEFAULT_PAN_ID, tap3 and IPv6 can be in use. Refer to RIOT-course IPv6 example if something is broken.
+It's possible to run the experiment at another site, and current DEFAULT_CHANNEL, DEFAULT_PAN_ID, tap3 and IPv6 address can be in use. Refer to [IOT-LAB IPv6 example](https://www.iot-lab.info/learn/tutorials/riot/riot-public-ipv6-m3/) if something is broken.
 
-## Building and running the backend
+## Building, configuring and running the backend
 
 Requirements for the virtual machine (VM) running in the cloud service:
 
@@ -81,9 +81,28 @@ We don't cover how to deploy and setup the VM to the cloud provider, as many dif
 
 SSH to your VM. Clone the repository to the VM.
 
-If Docker isn't installed, install it using these instructions: https://docs.docker.com/engine/install/ubuntu/
+If Docker isn't installed, install it using these instructions: https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+
+Make copies from the compose.yaml.example and coap-server/influxdb_config.ini.example files and remove .example suffixes. This .example pattern is used not to leak any credentials to git repository in accident. In compose.yaml file change variables DOCKER_INFLUXDB_INIT_USERNAME and DOCKER_INFLUXDB_INIT_PASSWORD as you like. 
 
 To build and run the backend in whole (CoAP backend + influxdb + Grafana) run the following command:
 ```
 docker compose up
 ```
+
+Backend isn't fully functional yet. We need to generate influxDB API tokens to authenticate our services to access the database.
+
+### Generate influxDB API token
+
+Log in to http://localhost:8086 (or your cloud IP instead of localhost) and log in to influxDB using credentials configured in compose.yaml. Click "Arrow Up" icon at the left navigation bar -> "API Tokens". Click "Generate API Token" and then "All Access API token". Write "InfluxDB" to description and click "Save". Copy the API Token to the coap-server/influxdb_config.ini file. Run the following commands:
+
+```
+docker compose down
+docker compose up
+```
+
+> NOTE! It's bad habit to generate an all-access token for a service that just requires write access to the database. It's used here to simplify things as this i a proof-of-consept design for course project, but don't do this in production as it can lead to security issues.
+
+### Configure Grafana
+
+Log in to http://localhost:3000 (or your cloud IP instead of localhost). Use the default log-in credentials (user: admin, password: admin). Connect the database to grafana and add a dashboard (more defined instructions needed).
