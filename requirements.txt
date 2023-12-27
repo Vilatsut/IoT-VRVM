@@ -8,9 +8,7 @@ google-auth-httplib2==0.2.0
 googleapis-common-protos==1.62.0
 httplib2==0.22.0
 idna==3.6
-iotlabcli==3.3.0
 jmespath==1.0.1
-protobuf==4.25.1
 pyasn1==0.5.1
 pyasn1-modules==0.3.0
 pyparsing==3.1.1
@@ -18,6 +16,6 @@ requests==2.31.0
 rsa==4.9
 uritemplate==4.1.1
 urllib3==2.1.0
-aiocoap==0.4.7
-influxdb_client==1.38.0
-protobuf==4.25.1
+
+-r coap-server/requirements.txt
+-r node/requirements.txt

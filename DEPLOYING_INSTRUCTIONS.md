@@ -14,21 +14,30 @@ cd RIOT
 git checkout 2023.07-branch
 ```
 
-## Building firmware
+## Install python dependencies
 
-Correct tools must be instelled to build the RIOT OS firmware. Using Ubuntu-based distro the required tools can be installed using the following commands:
-```
-sudo apt install git gcc-arm-none-eabi make gcc-multilib libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen wget unzip python3-serial protobuf-compiler
-```
-To install python dependencies run the following under 'root' directory:
+It is recommended (but not neccessary) to make a seperated python virtual environment. To install python dependencies run the following under 'root' directory:
+
 ```
 pip install -r requirements.txt
 ```
+
+## Building firmware
+
+Correct tools must be instelled to build the RIOT OS firmware. Using Ubuntu-based distro the required tools can be installed using the following commands:
+
+```
+sudo apt install git gcc-arm-none-eabi make gcc-multilib libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen wget unzip python3-serial protobuf-compiler
+```
+
 To build the firmware for target iotlab-m3 run the following under the 'node' directory:
+
 ```
 make all
 ```
+
 To build the firmware for linux (native) use the following command:
+
 ```
 make all BOARD=native
 ```
