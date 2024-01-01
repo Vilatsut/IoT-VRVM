@@ -110,8 +110,21 @@ docker compose down
 docker compose up
 ```
 
-> NOTE! It's bad habit to generate an all-access token for a service that just requires write access to the database. It's used here to simplify things as this i a proof-of-consept design for course project, but don't do this in production as it can lead to security issues.
+> NOTE! It's bad habit to generate an all-access token for a service that just requires write access to the database. It's used here to simplify things as this is a proof-of-consept design for course project, but don't do this in production as it can lead to security issues.
 
 ### Configure Grafana
 
-Log in to http://localhost:3000 (or your cloud IP instead of localhost). Use the default log-in credentials (user: admin, password: admin). Connect the database to grafana and add a dashboard (more defined instructions needed).
+Connect the database to grafana:
+
+Log in to http://localhost:3000 (or your cloud IP instead of localhost). Use the default log-in credentials (user: admin, password: admin). 
+
+Open the menu on top left and click "Connections". Search for "InfluxDB" and add it as a "New Data Source". 
+Select Query Language as "FLUX". 
+
+Enter URL "http://influxdb:8086" and enable "Basic auth". (// may need to test if connecting to cloud IP instead. Remove this comment if it works when connecting to cloud IP!!!).
+
+Enter InfluxDB's username and password. Then input the organization's name (by default it's "my-org") and enter the token we set-up in InfluxDB previously. For the Default Bucket enter "iot-course".
+
+Click "Save & Test".
+
+(Dashboard instructions will be added later)
