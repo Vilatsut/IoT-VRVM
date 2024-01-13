@@ -5,14 +5,24 @@ These instrcutions will go through how to deploy the project. The sensor nodes a
 ## Cloning the repo
 
 RIOT OS is included to this repository as a submodule. After cloning this repository the submodules must be downloaded using the command
+
 ```
 git submodule update --init
 ```
+
 Check out to correct branch (release 2023.07 is used)
+
 ```
 cd RIOT
 git checkout 2023.07-branch
 ```
+
+Roll back to previous version of LPSXXX driver. This is because the current version of the driver seems to be buggy as it return negative values if using the develop branch and values like 170C if using the release branch.
+
+```
+git checkout 947efa7 drivers/lpsxxx/
+```
+
 
 ## Install python dependencies
 
