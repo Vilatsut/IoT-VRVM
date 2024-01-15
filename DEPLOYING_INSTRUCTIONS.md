@@ -40,6 +40,7 @@ Correct tools must be instelled to build the RIOT OS firmware. Using Ubuntu-base
 sudo apt install git gcc-arm-none-eabi make gcc-multilib libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen wget unzip python3-serial protobuf-compiler
 ```
 
+### Building locally to check for errors etc.
 To build the firmware for target iotlab-m3 run the following under the 'node' directory:
 
 ```
@@ -54,12 +55,15 @@ make all BOARD=native
 
 ## Running experiment in iot-lab.info
 
+### Spawning nodes in iot-lab
 It's required to have access to iot-lab.info to run the experiment. Install iotlab-cli and authenticate to the service (refer to IoT-lab documentation). Run the experiment with the following commands
 ```
 iotlab-experiment submit -n "node" -d 120 -l 2,archi=m3:at86rf231+site=grenoble
 iotlab-experiment wait --timeout 30 --cancel-on-timeout
 iotlab-experiment --jmespath="items[*].network_address | sort(@)" get --nodes
-``` 
+```
+
+### Build the coap node on iot-lab
 To run the client node with the default COAP server address specified in the Makefile, use command:
 ```
 make BOARD=iotlab-m3 DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID>.grenoble.iot-lab.info flash
@@ -68,10 +72,12 @@ To run it with a different COAP_SERVER address, change the value in the 'Makefil
 ```
 make BOARD=iotlab-m3 COAP_SERVER=<IPv6_address> DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID>.grenoble.iot-lab.info flash
 ```
+### Build the border router node
 To flash the border router node, use command:
 ```
 make -C ../RIOT/examples/gnrc_border_router/ BOARD=iotlab-m3 ETHOS_BAUDRATE=500000 DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID2>.grenoble.iot-lab.info flash
 ```
+### Sanity check connection
 Open two SSH connections to IoT-lab SSH-frontend:
 ```
 ssh <login>@grenoble.iot-lab.info
@@ -86,6 +92,29 @@ sudo ethos_uhcpd.py m3-<ID2> tap3 2001:660:5307:3103::/64
 ```
 It's possible to run the experiment at another site, and current DEFAULT_CHANNEL, DEFAULT_PAN_ID, tap3 and IPv6 address can be in use. Refer to [IOT-LAB IPv6 example](https://www.iot-lab.info/learn/tutorials/riot/riot-public-ipv6-m3/) if something is broken.
 
+### Example outputs
+
+```shell
+user@grenoble:~$ nc m3-98 20000
+gcoap: timeout for msg ID 6101
+gcoap: timeout for msg ID 6105
+gcoap: response Success, code 2.04, empty payload
+```
+```shell
+user@grenoble:~$ sudo ethos_uhcpd.py m3-99 tap3 2001:660:5307:3103::/64
+net.ipv6.conf.tap3.forwarding = 1
+net.ipv6.conf.tap3.accept_ra = 0
+Switch from 'root' to 'user'
+Joining IPv6 multicast group...
+entering loop...
+Switch from 'root' to 'user'
+----> ethos: sending hello.
+----> ethos: activating serial pass through.
+----> ethos: hello reply received
+----> ethos: hello reply received
+uhcp_client(): no reply received
+got packet from <ipv6> port 12345
+```
 ## Building, configuring and running the backend
 
 Requirements for the virtual machine (VM) running in the cloud service:
