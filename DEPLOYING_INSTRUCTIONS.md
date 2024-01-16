@@ -77,7 +77,7 @@ To flash the border router node, use command:
 ```
 make -C ../RIOT/examples/gnrc_border_router/ BOARD=iotlab-m3 ETHOS_BAUDRATE=500000 DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID2>.grenoble.iot-lab.info flash
 ```
-### Sanity check connection
+### Open node control connections 
 Open two SSH connections to IoT-lab SSH-frontend:
 ```
 ssh <login>@grenoble.iot-lab.info
