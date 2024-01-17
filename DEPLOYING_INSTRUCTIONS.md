@@ -64,7 +64,7 @@ iotlab-experiment --jmespath="items[*].network_address | sort(@)" get --nodes
 ```
 
 ### Build the coap node on iot-lab
-To run the client node with the default COAP server address specified in the Makefile, use command:
+To run the client node with the default COAP server address specified in the Makefile, run the following command in node folder:
 ```
 make BOARD=iotlab-m3 DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID>.grenoble.iot-lab.info flash
 ```
@@ -73,7 +73,7 @@ To run it with a different COAP_SERVER address, change the value in the 'Makefil
 make BOARD=iotlab-m3 COAP_SERVER=<IPv6_address> DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID>.grenoble.iot-lab.info flash
 ```
 ### Build the border router node
-To flash the border router node, use command:
+To flash the border router node, run the following command in node folder:
 ```
 make -C ../RIOT/examples/gnrc_border_router/ BOARD=iotlab-m3 ETHOS_BAUDRATE=500000 DEFAULT_CHANNEL=17 DEFAULT_PAN_ID=0x34EF IOTLAB_NODE=m3-<ID2>.grenoble.iot-lab.info flash
 ```
@@ -166,4 +166,17 @@ Enter InfluxDB's username and password. Then input the organization's name (by d
 
 Click "Save & Test".
 
-(Dashboard instructions will be added later)
+To create an example dashboard in Grafana containing the data from the past 15 minutes
+1. Press the 3 lines on top left
+2. Press "dashboards"
+3. Press "new" -> "new dashboard"
+4. Press "Add visualization"
+5. Press the previously created InfluxDB data source
+6. In the bottom part, add the following query:
+```
+from(bucket: "iot-course")
+    |> range(start: -15m)
+    |> yield()
+```
+7. Press "save" from top right, then "apply".
+8. Now you have a dashboard with the measurements from the past 15 minutes.
