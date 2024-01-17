@@ -155,16 +155,15 @@ docker compose up
 
 Connect the database to grafana:
 
-Log in to http://localhost:3000 (or your cloud IP instead of localhost). Use the default log-in credentials (user: admin, password: admin). 
-
-Open the menu on top left and click "Connections". Search for "InfluxDB" and add it as a "New Data Source". 
-Select Query Language as "FLUX". 
-
-Enter URL "http://influxdb:8086" and enable "Basic auth". (// may need to test if connecting to cloud IP instead. Remove this comment if it works when connecting to cloud IP!!!).
-
-Enter InfluxDB's username and password. Then input the organization's name (by default it's "my-org") and enter the token we set-up in InfluxDB previously. For the Default Bucket enter "iot-course".
-
-Click "Save & Test".
+1. Log in to http://<grafana_ip>:<grafana_port>. Use the default log-in credentials (user: admin, password: admin). 
+2. Open the menu on top left and click "Connections". Search for "InfluxDB" and add it as a "New Data Source". 
+3. Select Query Language as "FLUX". 
+4. Enter URL "http://<influx_ip>:<influx_port>" and enable "Basic auth".
+5. Enter InfluxDB's username and password.
+6. Input the organization's name (by default it's "my-org")
+7. Enter the token we set-up in InfluxDB previously.
+8. Enter the bucket, for the Default Bucket enter "iot-course".
+9. Click "Save & Test".
 
 To create an example dashboard in Grafana containing the data from the past 15 minutes
 1. Press the 3 lines on top left
