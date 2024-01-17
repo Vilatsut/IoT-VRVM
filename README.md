@@ -2,6 +2,11 @@
 
 RIOT and FIT-IOT-LAB based example project for learning.
 
+Demo video:
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/0KT0vdDhLT4)](https://youtu.be/0KT0vdDhLT4)
+
+
 ## Introduction to project
 
 The purpose of the project is to implement a whole IoT pipeline from sensors to cloud. IoT Testbed ([iot-lab.info](https://iot-lab.info)) is used to deploy the sensor nodes in a real environment with real hardware. Sensor nodes uses 6LoWPAN to communicate with a border router (also deployed in the IoT Testped) and the border router routes the packages from sensor nodes to internet.
